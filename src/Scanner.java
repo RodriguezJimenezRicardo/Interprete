@@ -34,7 +34,7 @@ public class Scanner {
 
     public List<Token> scan() throws Exception {
         String lexema = "";
-        int estado = 0;
+        int estado = 0,linea=0;
         char c;
         Token t;
 
@@ -99,6 +99,14 @@ public class Scanner {
                     }else if(c=='*'){
                         estado=40;
                         lexema+=c;
+                    }else if(c=='\n'||c=='\r'){
+                        linea++;
+                    }else if(c==' '){
+                        estado=0;
+                    }else{
+                        //caracter no valido
+                        Interprete.error(linea-1, "El caracter "+c+" no es aceptado en este lenguaje");
+                        estado=0;
                     }
 
                     break;
@@ -172,7 +180,6 @@ public class Scanner {
 
                         estado=0;
                         lexema="";
-
                     }else{
                         t = new Token(TipoToken.BANG,lexema);
                         tokens.add(t);
@@ -232,7 +239,7 @@ public class Scanner {
                         estado=17;
                         lexema+=c;
                     }else{
-                        Interprete.error(0,"Numero decimal incompleto");
+                        Interprete.error(linea-1,"Numero decimal incompleto");
                         //estado=0;
                     }
                     break;
@@ -262,7 +269,7 @@ public class Scanner {
                         lexema+=c;
                     }else{
                         //Error
-                        Interprete.error(0,"Numero exponencial error");
+                        Interprete.error(linea-1,"Numero exponencial error");
                         estado=0;
                     }
                     break;
@@ -272,7 +279,7 @@ public class Scanner {
                         lexema+=c;
                     }else{
                         //error
-                        Interprete.error(0,"No es numero valido");
+                        Interprete.error(linea-1,"No es numero valido");
                         //estado=0;
                     }
                     break;
@@ -302,10 +309,12 @@ public class Scanner {
                         estado=0;
                         lexema ="";
 
-                    }else if(c=='\n'){
+                    }else if(c=='\n'||c=='\r'){
                         //Error
-                        Interprete.error(0,"Cadena incompleta");
-                        estado=0;//esta cosa hizo que no imprimiera lo raro en l P4 y ya solo mando un error
+                        Interprete.error(linea-1,"Cadena incompleta");
+                        linea++;
+                        lexema="";
+                        estado=0;
                     }else{
                         //Cualquier otro
                         estado=24;
@@ -332,40 +341,32 @@ public class Scanner {
                 case 27:
                     if(c=='*'){
                         estado=28;
-
-                    }else if(c=='\n'){
-                        //Error
-                        //Interprete.error(0,"Comentario multilinea incompleto");
+                    }else if(c=='\n'||c=='\r'){
+                        linea++;
                         //estado=0;
-
                     }else{
                         estado=27;
-
                     }
                     break;
                 case 28:
                     if(c=='*'){
                         estado=28;
-
                     }else if(c=='/'){
                         //No genera token,
-                        estado=0;//
+                        estado=0;
                         lexema="";
-                       // i--;
-                    }else{/**////
+                    }else{
                         estado=27;
-
                     }
                     break;
                 case 30:
                     if(c=='\n'||c=='\r'){
                         //No genera token
+                        linea++;
                         estado=0;
                         lexema="";
-                        //i--;
                     }else{
                         estado=30;
-
                     }
                     break;
                 case 31:
