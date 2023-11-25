@@ -388,7 +388,7 @@ public class Scanner {
                 case 33:
                     t = new Token(TipoToken.LEFT_BRACE,lexema);
                     tokens.add(t);
-
+//java Interprete C:\Users\doabl\OneDrive\Escritorio\Pruebas\Prueba3.txt
                     estado=0;
                     lexema="";
                     i--;
