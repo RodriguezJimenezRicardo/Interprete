@@ -50,13 +50,13 @@ public class Interprete {
     private static void ejecutar(String source) {
         try {
             Scanner scanner = new Scanner(source);
-            List<Token> tokens = scanner.scan();
+            List<Token> tokens = scanner.scan();//analizador lexico
 
             /*for (Token token : tokens) {
                 System.out.println(token);
             }*/
-            Parser parser = new ASDR(tokens);
-            parser.parse();
+            Parser ast = new AST(tokens);
+            ast.parse();
 
         } catch (Exception ex) {
             ex.printStackTrace();
